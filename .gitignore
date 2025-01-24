@@ -1,0 +1,2 @@
+# ignore npm's node_modules folder
+node_modules
