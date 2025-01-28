@@ -1,5 +1,5 @@
-const express = require("express");
-const morgan = require("morgan");
+const express = require('express');
+const morgan = require('morgan');
 
 const app = express();
 
@@ -27,6 +27,11 @@ app.get('/', (req, res) => {
 
 app.use(express.static('public'));
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Whoops! Something went wrong');
+});
+
 app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+    console.log('Server is running on port 3000');
 });
