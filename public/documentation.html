@@ -3,59 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MovieMinded</title>
+  <title>MovieMinded Documentation</title>
 </head>
 <body>
+  <h1> MovieMinded Documentation</h1>
+  <p>MovieMinded is a REST API (server-side component of a web application) that provides users with access to key information about all of their favorite movies, genres, and directors. Users are able to sign up, update their personal information in their profile, and create personalized lists of their favorite movies.</p>
   <table>
     <tr>
-      <th>Function</th>
-      <th>Request Method</th>
-      <th>URL Endpoint</th>
+      <th>Request</th>
+      <th>Method</th>
+      <th>Endpoint</th>
+      <th>Query Parameters</th>
+      <th>Request Body Data Format</th>
+      <th>Response Body Data Format</th>
     </tr>
     <tr>
-      <td>Return a list of ALL movies</td>
+      <td>Return a list of all movies</td>
       <td>GET</td>
       <td>/movies</td>
+      <td>none</td>
+      <td>none</td>
+      <td>A JSON array of all movies. If none available, returns a 500 error.</td>
     </tr>
     <tr>
       <td>Return data about a single movie by title</td>
       <td>GET</td>
-      <td>/movies/:name</td>
+      <td>/movies/[title]</td>
+      <td>title (URL parameter)</td>
+      <td>none</td>
+      <td>A JSON object of the movie specified. If not found, returns a 404 error.</td>
       <tr>
         <td>Return data about a genre by title</td>
         <td>GET</td>
-        <td>/movies/:name/genre</td>
+        <td>/movies/[title]/genre</td>
+        <td>title (URL parameter)</td>
+        <td>none</td>
+        <td>A JSON array of genre's details including a list of its movies. If movie is not found, returns 404 error.</td>
       </tr>
       <tr>
         <td>Return data about a director by name</td>
         <td>GET</td>
-        <td>/directors/:name</td>
+        <td>/directors/[director]</td>
+        <td>director name (URL parameter)</td>
+        <td>none</td>
+        <td>A JSON array with director's details including a list of their movies. If director is not found, returns 404 error.</td>
       </tr>
       <tr>
         <td>Allow new users to register</td>
         <td>POST</td>
         <td>/users</td>
+        <td>username (URL parameter)</td>
+        <td>A JSON object with required fields (username, password, email, country, date of birth)</td>
+        <td>A JSON object with new user data. If a required field matches an existing record or is empty, returns 400 error. If a required field is faulty, returns 422 error.</td>
       </tr>
     </tr>
     <tr>
       <td>Allow users to update their username</td>
       <td>PUT</td>
-      <td>/users/:username</td>
+      <td>/users/[username]</td>
+      <td>username (URL parameter)</td>
+      <td>A JSON object with new user data</td>
+      <td>A JSON object with updated data is returned. If a field is faulty, returns 422 error. If a field is empty or matches current username, returns 400 error.</td>
     </tr>
     <tr>
       <td>Allow users to add a movie to their favorites list</td>
-      <td>POST</td>
-      <td>/users/:username/favorites</td>
+      <td>PUT</td>
+      <td>/users/[username]/favorites/[movieID]</td>
+      <td>username, movieID</td>
+      <td>A JSON object with movie title</td>
+      <td>If username and movie title are found, the movie is added to user's favorites list. If not found, returns 404 error. If movie is already in user's favorites list, returns 400 error.</td>
     </tr>
     <tr>
       <td>Allow users to remove a movie from their favorites list</td>
       <td>DELETE</td>
-      <td>/users/:username/favorites</td>
+      <td>/users/[username]/favorites/[movieID]</td>
+      <td>username, movieID</td>
+      <td>A JSON object with movie title</td>
+      <td>If username and movie title are both found, the movie is removed from user's favorites list. If not found, returns 404 error.</td>
     </tr>
     <tr>
       <td>Allow current users to deregister</td>
       <td>DELETE</td>
-      <td>/users/:username</td>
+      <td>/users/[username]</td>
+      <td>username (URL parameter)</td>
+      <td>none</td>
+      <td>If username is found, they are removed and a confirmation message is returned. If username is not found, returns 404 error.</td>
     </tr>
   </table>
 </body>
