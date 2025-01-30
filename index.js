@@ -23,23 +23,6 @@ app.use('/MOVIE_API', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(morgan('dev'));
 
-// Define your /movies endpoint
-/**
- * @swagger
- * /movies:
- *   get:
- *     summary: Get all movies
- *     description: Returns a list of all movies
- *     responses:
- *       200:
- *         description: Successful GET request returning a JSON object holding data on all movies
- *         content:
- *           application/json:
- *             schema:
- *               type: string
- *               example: 'Successful GET request returning a JSON object holding data on all movies'
- */
-
 app.get('/movies', (req, res) => {
     const movies = [
         { title: 'The Shawshank Redemption', director: 'Frank Darabont', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_.jpg', year: 1994, genre: 'Drama', description: 'A banker convicted of uxoricide forms a friendship over a quarter century with a hardened convict, while maintaining his innocence and trying to remain hopeful through simple compassion.' },
