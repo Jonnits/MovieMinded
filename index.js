@@ -1,9 +1,10 @@
-const express = require('express');
+const express = require('express'),
+app = express();
+const bodyParser = require('body-parser'),
+uuid = require('uuid');
 const morgan = require('morgan');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-
-const app = express();
 
 const swaggerOptions = {
     definition: {
@@ -23,22 +24,67 @@ app.use('/MOVIE_API', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(morgan('dev'));
 
-app.get('/movies', (req, res) => {
-    const movies = [
-        { title: 'The Shawshank Redemption', director: 'Frank Darabont', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_.jpg', year: 1994, genre: 'Drama', description: 'A banker convicted of uxoricide forms a friendship over a quarter century with a hardened convict, while maintaining his innocence and trying to remain hopeful through simple compassion.' },
-        { title: 'The Godfather', director: 'Francis Ford Coppola', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', year: 1972, genre: 'Crime', description: 'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.' },
-        { title: 'The Dark Knight', director: 'Christopher Nolan', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_FMjpg_UX1000_.jpg', year: 2008, genre: 'Action', description: 'When a menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman, James Gordon and Harvey Dent must work together to put an end to the madness.' },
-        { title: 'The Godfather Part II', director: 'Francis Ford Coppola', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNzc1OWY5MjktZDllMi00ZDEzLWEwMGItYjk1YmRhYjBjNTVlXkEyXkFqcGc@._V1_.jpg', year: 1974, genre: 'Crime', description: 'The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.' },
-        { title: '12 Angry Men', director: 'Sidney Lumet', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/12_Angry_Men_%281957_film_poster%29.jpg/1200px-12_Angry_Men_%281957_film_poster%29.jpg', year: 1957, genre: 'Drama', description: 'The jury in a New York City murder trial is frustrated by a single member whose skeptical caution forces them to more carefully consider the evidence before jumping to a hasty verdict.' },
-        { title: 'The Lord of the Rings: The Return of the King', director: 'Peter Jackson', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMTZkMjBjNWMtZGI5OC00MGU0LTk4ZTItODg2NWM3NTVmNWQ4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', year: 2003, genre: 'Fantasy', description: 'Gandalf and Aragorn lead the World of Men against Saurons army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.' },
-        { title: 'Schindlers List', director: 'Steven Spielberg', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNjM1ZDQxYWUtMzQyZS00MTE1LWJmZGYtNGUyNTdlYjM3ZmVmXkEyXkFqcGc@._V1_.jpg', year: 1993, genre: 'Tragedy', description: 'In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.' },
-        { title: 'Pulp Fiction', director: 'Quentin Tarantino', imageUrl: 'https://m.media-amazon.com/images/M/MV5BYTViYTE3ZGQtNDBlMC00ZTAyLTkyODMtZGRiZDg0MjA2YThkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', year: 1994, genre: 'Crime', description: 'The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.' },
-        { title: 'The Lord of the Rings: The Fellowship of the Ring', director: 'Peter Jackson', imageUrl: '', year: 2001, genre: 'Fantasy', description: 'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.' },
-        { title: 'The Good, the Bad, and the Ugly', director: 'Sergio Leone', imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/45/Good_the_bad_and_the_ugly_poster.jpg', year: 1966, genre: 'Spaghetti Western', description: 'A bounty-hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery.' },
-            ];
-        res.json(movies);
-        });
+app.use(bodyParser.json());
 
+let users = [
+
+]
+
+let movies = [
+    { title: 'The Shawshank Redemption', director: 'Frank Darabont', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_.jpg', year: 1994, genre: 'Drama', description: 'A banker convicted of uxoricide forms a friendship over a quarter century with a hardened convict, while maintaining his innocence and trying to remain hopeful through simple compassion.' },
+    { title: 'The Godfather', director: 'Francis Ford Coppola', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', year: 1972, genre: 'Crime', description: 'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.' },
+    { title: 'The Dark Knight', director: 'Christopher Nolan', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_FMjpg_UX1000_.jpg', year: 2008, genre: 'Action', description: 'When a menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman, James Gordon and Harvey Dent must work together to put an end to the madness.' },
+    { title: 'The Godfather Part II', director: 'Francis Ford Coppola', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNzc1OWY5MjktZDllMi00ZDEzLWEwMGItYjk1YmRhYjBjNTVlXkEyXkFqcGc@._V1_.jpg', year: 1974, genre: 'Crime', description: 'The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.' },
+    { title: '12 Angry Men', director: 'Sidney Lumet', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/12_Angry_Men_%281957_film_poster%29.jpg/1200px-12_Angry_Men_%281957_film_poster%29.jpg', year: 1957, genre: 'Drama', description: 'The jury in a New York City murder trial is frustrated by a single member whose skeptical caution forces them to more carefully consider the evidence before jumping to a hasty verdict.' },
+    { title: 'The Lord of the Rings: The Return of the King', director: 'Peter Jackson', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMTZkMjBjNWMtZGI5OC00MGU0LTk4ZTItODg2NWM3NTVmNWQ4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', year: 2003, genre: 'Fantasy', description: 'Gandalf and Aragorn lead the World of Men against Saurons army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.' },
+    { title: 'Schindlers List', director: 'Steven Spielberg', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNjM1ZDQxYWUtMzQyZS00MTE1LWJmZGYtNGUyNTdlYjM3ZmVmXkEyXkFqcGc@._V1_.jpg', year: 1993, genre: 'Tragedy', description: 'In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.' },
+    { title: 'Pulp Fiction', director: 'Quentin Tarantino', imageUrl: 'https://m.media-amazon.com/images/M/MV5BYTViYTE3ZGQtNDBlMC00ZTAyLTkyODMtZGRiZDg0MjA2YThkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', year: 1994, genre: 'Crime', description: 'The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.' },
+    { title: 'The Lord of the Rings: The Fellowship of the Ring', director: 'Peter Jackson', imageUrl: '', year: 2001, genre: 'Fantasy', description: 'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.' },
+    { title: 'The Good, the Bad, and the Ugly', director: 'Sergio Leone', imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/45/Good_the_bad_and_the_ugly_poster.jpg', year: 1966, genre: 'Spaghetti Western', description: 'A bounty-hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery.' },
+]
+
+// READ/ GET all movies list
+app.get('/movies', (req, res) => {
+    res.status(200).json(movies);
+        })
+
+// READ/ GET specific movie
+app.get('/movies/:title', (req, res) => {
+    const { title } = req.params;
+    const movie = movies.find( movie => movie.Title === title );
+
+    if (movie) {
+        res.status(200).json(movie);
+    } else {
+        res.status(400).send('No movie found.')
+    }
+})
+
+// READ/ GET genre by movie title
+app.get('/movies/genre/:genreName', (req, res) => {
+    const { genreName } = req.params;
+    const genre = movies.find( movie => movie.genreName === genreName ).Genre;
+
+    if (genre) {
+        res.status(200).json(genre);
+    } else {
+        res.status(400).send('No such genre.')
+    }
+})
+
+// READ/ GET director by name
+app.get('/movies/directors/:directorName', (req, res) => {
+    const { directorName } = req.params;
+    const director = movies.find( movie => movie.Director.Name === directorName ).Director;
+
+    if (director) {
+        res.status(200).json(director);
+    } else {
+        res.status(400).send('No such director.')
+    }
+})
+
+// READ/ GET top movies list
 app.get('/movies/topmovies', (req, res) => {
     const topMovies = [
 { title: 'Movie 1', year: 2024, genre: 'Action' },
@@ -50,9 +96,80 @@ app.get('/movies/topmovies', (req, res) => {
 res.json(topMovies);
 });
 
+// CREATE/ ADD new user
+app.post('/users', (req, res) => {
+    const newUser = req.body;
+
+    if (newUser.name) {
+        newUser.id = uuid.v4();
+        users.push(newUser);
+        res.status(201).json(newUser)
+    } else {
+        res.status(400).send('All users need a username.')
+    }
+})
+
+// UPDATE/ PUT new username
+app.put('/users/:id', (req, res) => {
+    const { id } = req.params;
+    const updatedUser = req.body;
+
+    let user = users.find( user => user.id == id );
+
+    if (user) {
+        user.name = updatedUser.name;
+        res.status(200).json(user);
+    } else {
+        res.status(400).send('No such user.')
+    }
+})
+
+// CREATE/ POST new movie to favorites list
+app.post('/users/:id/:movieTitle', (req, res) => {
+    const { id, movieTitle } = req.params;
+
+    let user = users.find( user => user.id == id );
+
+    if (user) {
+        user.favoriteMovies.push(movieTitle);
+        res.status(200).send(`${movieTitle} has been added to user ${id}'s favorites.`);;
+    } else {
+        res.status(400).send('No such user.')
+    }
+})
+
+// DELETE/ DELETE movie from favorites list
+app.delete('/users/:id/:movieTitle', (req, res) => {
+    const { id, movieTitle } = req.params;
+
+    let user = users.find( user => user.id == id );
+
+    if (user) {
+        user.favoriteMovies = user.favoriteMovies.filter( title=> title !== movieTitle);
+        res.status(200).send(`${movieTitle} has been removed from user ${id}'s favorites.`);;
+    } else {
+        res.status(400).send('No such user.')
+    }
+})
+
+// DELETE/ DELETE existing user
+app.delete('/users/:id', (req, res) => {
+    const { id } = req.params;
+
+    let user = users.find( user => user.id == id );
+
+    if (user) {
+        users = users.filter( user => used.id != id);
+        res.status(200).send(`User ${id} has been deleted.`);
+    } else {
+        res.status(400).send('No such user.')
+    }
+})
+
+// home page
 app.get('/', (req, res) => {
     res.send('Which movies move you?');
-});
+})
 
 app.use(express.static('public'));
 
