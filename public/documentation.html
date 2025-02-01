@@ -26,7 +26,7 @@
       <td>GET</td>
       <td>/movies</td>
       <td>none</td>
-      <td>none</td>
+      <td>None</td>
       <td>A JSON array of all movies. If none available, returns a 500 error.</td>
     </tr>
     <tr>
@@ -34,14 +34,14 @@
       <td>GET</td>
       <td>/movies/[title]</td>
       <td>title (URL parameter)</td>
-      <td>none</td>
+      <td>None</td>
       <td>A JSON object of the movie specified. If not found, returns a 404 error.</td>
       <tr>
         <td>Return data about a genre by title</td>
         <td>GET</td>
         <td>/movies/[title]/genre</td>
         <td>title (URL parameter)</td>
-        <td>none</td>
+        <td>None</td>
         <td>A JSON array of genre's details including a list of its movies. If movie is not found, returns 404 error.</td>
       </tr>
       <tr>
@@ -49,7 +49,7 @@
         <td>GET</td>
         <td>/directors/[director]</td>
         <td>director name (URL parameter)</td>
-        <td>none</td>
+        <td>None</td>
         <td>A JSON array with director's details including a list of their movies. If director is not found, returns 404 error.</td>
       </tr>
       <tr>
@@ -90,7 +90,7 @@
       <td>DELETE</td>
       <td>/users/[username]</td>
       <td>username (URL parameter)</td>
-      <td>none</td>
+      <td>None</td>
       <td>If username is found, they are removed and a confirmation message is returned. If username is not found, returns 404 error.</td>
     </tr>
   </table>

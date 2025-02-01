@@ -15,12 +15,12 @@ const swaggerOptions = {
         description: 'MovieMinded is a REST API (server-side component of a web application) that provides users with access to key information about all of their favorite movies, genres, and directors. Users are able to sign up, update their personal information in their profile, and create personalized lists of their favorite movies.'
       }
     },
-    apis: ['./index.js'], // Path to the API docs (in this case, it's the current file)
+    apis: ['./index.js'], 
   };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
-app.use('/MOVIE_API', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/movie_api', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(morgan('dev'));
 
@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 
 let users = [
 
-]
+];
 
 let movies = [
     { title: 'The Shawshank Redemption', director: 'Frank Darabont', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_.jpg', year: 1994, genre: 'Drama', description: 'A banker convicted of uxoricide forms a friendship over a quarter century with a hardened convict, while maintaining his innocence and trying to remain hopeful through simple compassion.' },
@@ -41,17 +41,18 @@ let movies = [
     { title: 'Pulp Fiction', director: 'Quentin Tarantino', imageUrl: 'https://m.media-amazon.com/images/M/MV5BYTViYTE3ZGQtNDBlMC00ZTAyLTkyODMtZGRiZDg0MjA2YThkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', year: 1994, genre: 'Crime', description: 'The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.' },
     { title: 'The Lord of the Rings: The Fellowship of the Ring', director: 'Peter Jackson', imageUrl: '', year: 2001, genre: 'Fantasy', description: 'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.' },
     { title: 'The Good, the Bad, and the Ugly', director: 'Sergio Leone', imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/45/Good_the_bad_and_the_ugly_poster.jpg', year: 1966, genre: 'Spaghetti Western', description: 'A bounty-hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery.' },
-]
+];
 
 // READ/ GET all movies list
 app.get('/movies', (req, res) => {
     res.status(200).json(movies);
-        })
+})
 
 // READ/ GET specific movie
 app.get('/movies/:title', (req, res) => {
     const { title } = req.params;
-    const movie = movies.find( movie => movie.Title === title );
+    
+    const movie = movies.find( movie => movie.title === title );
 
     if (movie) {
         res.status(200).json(movie);
@@ -60,41 +61,37 @@ app.get('/movies/:title', (req, res) => {
     }
 })
 
-// READ/ GET genre by movie title
+// READ/ GET movies by genre
 app.get('/movies/genre/:genreName', (req, res) => {
     const { genreName } = req.params;
-    const genre = movies.find( movie => movie.genreName === genreName ).Genre;
 
-    if (genre) {
-        res.status(200).json(genre);
-    } else {
-        res.status(400).send('No such genre.')
+    if (!Array.isArray(movies)) {
+        return res.status(500).send('Internal server error: movies data is not an array.');
     }
-})
+
+    const genreMovies = movies.filter(movie => movie.genre && movie.genre.toLowerCase() === genreName.toLowerCase());
+
+    if (genreMovies.length > 0) {
+        res.status(200).json(genreMovies);
+    } else {
+        res.status(400).send('No movies found for this genre.');
+    }
+});
 
 // READ/ GET director by name
 app.get('/movies/directors/:directorName', (req, res) => {
     const { directorName } = req.params;
-    const director = movies.find( movie => movie.Director.Name === directorName ).Director;
 
-    if (director) {
-        res.status(200).json(director);
+    const directorMovies = movies.filter(movie => movie.director.toLowerCase() === directorName.toLowerCase());
+
+    if (directorMovies.length > 0) {
+        res.status(200).json(directorMovies);
     } else {
-        res.status(400).send('No such director.')
+        res.status(400).send('No movies found by this director.');
     }
-})
-
-// READ/ GET top movies list
-app.get('/movies/topmovies', (req, res) => {
-    const topMovies = [
-{ title: 'Movie 1', year: 2024, genre: 'Action' },
-{ title: 'Movie 2', year: 2023, genre: 'Drama' },
-{ title: 'Movie 3', year: 2022, genre: 'Comedy' },
-{ title: 'Movie 4', year: 2021, genre: 'Documentary' },
-{ title: 'Movie 5', year: 2020, genre: 'Horror' },
-    ];
-res.json(topMovies);
 });
+
+
 
 // CREATE/ ADD new user
 app.post('/users', (req, res) => {
@@ -128,15 +125,20 @@ app.put('/users/:id', (req, res) => {
 app.post('/users/:id/:movieTitle', (req, res) => {
     const { id, movieTitle } = req.params;
 
-    let user = users.find( user => user.id == id );
+    let user = users.find(user => user.id == id);
 
     if (user) {
-        user.favoriteMovies.push(movieTitle);
-        res.status(200).send(`${movieTitle} has been added to user ${id}'s favorites.`);;
+        // Initialize favoriteMovies array if it doesn't exist
+        if (!user.favoriteMovies) {
+            user.favoriteMovies = [];
+        }
+
+        user.favoriteMovies.push(movieTitle); // Add movie to favorites
+        res.status(200).send(`${movieTitle} has been added to user ${id}'s favorites.`);
     } else {
-        res.status(400).send('No such user.')
+        res.status(400).send('No such user.');
     }
-})
+});
 
 // DELETE/ DELETE movie from favorites list
 app.delete('/users/:id/:movieTitle', (req, res) => {
@@ -152,19 +154,19 @@ app.delete('/users/:id/:movieTitle', (req, res) => {
     }
 })
 
-// DELETE/ DELETE existing user
-app.delete('/users/:id', (req, res) => {
-    const { id } = req.params;
+// DELETE/ DELETE existing user by username
+app.delete('/users/:username', (req, res) => {
+    const { username } = req.params;
 
-    let user = users.find( user => user.id == id );
+    let user = users.find(user => user.name === username); 
 
     if (user) {
-        users = users.filter( user => used.id != id);
-        res.status(200).send(`User ${id} has been deleted.`);
+        users = users.filter(user => user.name !== username);
+        res.status(200).send(`User ${username} has been deleted.`);
     } else {
-        res.status(400).send('No such user.')
+        res.status(400).send('No such user.');
     }
-})
+});
 
 // home page
 app.get('/', (req, res) => {
@@ -178,6 +180,4 @@ app.use((err, req, res, next) => {
     res.status(500).send('Whoops! Something went wrong');
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
+app.listen(3000, () => console.log('Server is running on port 3000'));
