@@ -57,7 +57,11 @@
         <td>POST</td>
         <td>/users</td>
         <td>username (URL parameter)</td>
-        <td>A JSON object with required fields (username, password, email, country, date of birth)</td>
+        <td>A JSON object with required fields (currently just username), for example: <br><code>
+        {<br>
+          "name": "Jonnits"<br>
+        }</code>
+        </td>
         <td>A JSON object with new user data. If a required field matches an existing record or is empty, returns 400 error. If a required field is faulty, returns 422 error.</td>
       </tr>
     </tr>
@@ -66,7 +70,12 @@
       <td>PUT</td>
       <td>/users/[username]</td>
       <td>username (URL parameter)</td>
-      <td>A JSON object with new user data</td>
+      <td>A JSON object with new user data (name, ID), for example: <br><code>
+        {<br>
+          "name": "Jonnits",<br>
+          "id": "2b20a613-4302-4ff9-9e68-e1a617c55d5e"<br>
+      }</code>
+      </td>
       <td>A JSON object with updated data is returned. If a field is faulty, returns 422 error. If a field is empty or matches current username, returns 400 error.</td>
     </tr>
     <tr>
@@ -74,7 +83,12 @@
       <td>PUT</td>
       <td>/users/[username]/favorites/[movieID]</td>
       <td>username, movieID</td>
-      <td>A JSON object with movie title</td>
+      <td>A JSON object with movie title, for example:<br><code>
+        { <br>
+          "name": "Jonnits", <br>
+          "title": "Pulp Fiction" <br>
+        } </code>
+      </td>
       <td>If username and movie title are found, the movie is added to user's favorites list. If not found, returns 404 error. If movie is already in user's favorites list, returns 400 error.</td>
     </tr>
     <tr>
@@ -82,7 +96,12 @@
       <td>DELETE</td>
       <td>/users/[username]/favorites/[movieID]</td>
       <td>username, movieID</td>
-      <td>A JSON object with movie title</td>
+      <td>A JSON object with movie title, for example:<br><code>
+        {<br>
+          "name": "Jonnits",<br>
+          "title": "Pulp Fiction"<br>
+        }</code>
+      </td>
       <td>If username and movie title are both found, the movie is removed from user's favorites list. If not found, returns 404 error.</td>
     </tr>
     <tr>

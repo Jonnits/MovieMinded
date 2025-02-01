@@ -14,6 +14,15 @@ h1 {
     font-style: normal;
 }
 
+code {
+    font-family: "Fira Code", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #9f85b5;
+    color: #fff
+}
+
 table {
     border: 1px solid;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
