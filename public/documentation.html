@@ -59,9 +59,11 @@
         <td>/users</td>
         <td>username (URL parameter)</td>
         <td>A JSON object with required fields (currently just username), for example: <br><code>
-        {<br>
-          "name": "Jonnits"<br>
-        }</code>
+          {<br>
+            "Username": "Jonnits",<br>
+              "Password": "$afetyFirst",<br>
+              "Email": "jon@aol.com"<br>
+          }</code>
         </td>
         <td>A JSON object with new user data. If a required field matches an existing record or is empty, returns 400 error. If a required field is faulty, returns 422 error.</td>
       </tr>
@@ -74,7 +76,7 @@
       <td>A JSON object with new user data (name, ID), for example: <br><code>
         {<br>
           "name": "Jonnits",<br>
-          "id": "2b20a613-4302-4ff9-9e68-e1a617c55d5e"<br>
+          "id": "67aaa422b7a811adb061d8cb"<br>
       }</code>
       </td>
       <td>A JSON object with updated data is returned. If a field is faulty, returns 422 error. If a field is empty or matches current username, returns 400 error.</td>
