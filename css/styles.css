@@ -1,8 +1,10 @@
 body {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
+    justify-content: flex-start;
+    height: auto;
+    min-height: 100vh;
     margin: 0;
     background: #101010;
     color: #fff;
@@ -30,7 +32,7 @@ code {
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
-    background-color: #9f85b5;
+    background-color: #6189b6;
     color: #fff
 }
 
@@ -43,13 +45,13 @@ th {
     font-family: "Crimson Pro", serif;
     font-size: medium;
     color: #fff;
-    background-color: #61789e;
+    background-color: #3d63a0;
 }
 
 td {
     font-family: "Roboto", serif;
     font-size: small;
-    background-color: #dfe4ec;
+    background-color: #e2edff;
     color: #000;
 }
 

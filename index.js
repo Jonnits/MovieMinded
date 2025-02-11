@@ -9,7 +9,9 @@ const swaggerUi = require('swagger-ui-express');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://127.0.0.1:27017/test', { useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect("mongodb://127.0.0.1:27017/test")
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Could not connect to MongoDB', err));
 
 const app = express();
 app.use(morgan('dev'));
@@ -153,7 +155,7 @@ app.post('/users/:Username/movies/:MovieID', async (req, res) => {
     await Users.findOneAndUpdate({ Username: req.params.Username }, {
        $push: { FavoriteMovies: req.params.MovieID }
      },
-     { new: true }) // This line makes sure that the updated document is returned
+     { new: true }) 
     .then((updatedUser) => {
       res.json(updatedUser);
     })
@@ -194,4 +196,4 @@ app.get('/', (req, res) => {
     res.send('Which movies move you?');
 })
 
-app.listen(3000, () => console.log('Server is running on port 3000'));
+app.listen(4000, () => console.log('Server is running on port 4000'));
