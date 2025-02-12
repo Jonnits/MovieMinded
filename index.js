@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const jwt = require('jsonwebtoken');
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -117,30 +118,41 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), as
   Birthday: Date
 }*/
 app.post('/users', async (req, res) => {
-    await Users.findOne({ Username: req.body.Username })
-      .then((user) => {
-        if (user) {
-          return res.status(400).send(req.body.Username + ' already exists');
-        } else {
-          Users
-            .create({
-              Username: req.body.Username,
-              Password: req.body.Password,
-              Email: req.body.Email,
-              Birthday: req.body.Birthday
-            })
-            .then((user) =>{res.status(201).json(user) })
-          .catch((error) => {
-            console.error(error);
-            res.status(500).send('Error: ' + error);
-          })
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send('Error: ' + error);
-      });
-  });
+  await Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + ' already exists');
+      } else {
+        Users.create({
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday
+        })
+        .then((newUser) => {
+          // Create JWT token after user is created
+          const token = jwt.sign({ Username: newUser.Username }, 'your_jwt_secret', {
+            subject: newUser.Username,
+            expiresIn: '7d',
+            algorithm: 'HS256'
+          });
+
+          res.status(201).json({
+            user: newUser,
+            token: token
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error: ' + error);
+        })
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
+});
 
 // UPDATE/ PUT user info
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }), async (req, res) => {
