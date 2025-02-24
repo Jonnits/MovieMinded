@@ -26,23 +26,6 @@ let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 
-// let users = [
-
-//];
-
-// let movies = [
-   // { title: 'The Shawshank Redemption', director: 'Frank Darabont', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_.jpg', year: 1994, genre: 'Drama', description: 'A banker convicted of uxoricide forms a friendship over a quarter century with a hardened convict, while maintaining his innocence and trying to remain hopeful through simple compassion.' },
-   // { title: 'The Godfather', director: 'Francis Ford Coppola', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', year: 1972, genre: 'Crime', description: 'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.' },
-   // { title: 'The Dark Knight', director: 'Christopher Nolan', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_FMjpg_UX1000_.jpg', year: 2008, genre: 'Action', description: 'When a menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman, James Gordon and Harvey Dent must work together to put an end to the madness.' },
-   // { title: 'The Godfather Part II', director: 'Francis Ford Coppola', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNzc1OWY5MjktZDllMi00ZDEzLWEwMGItYjk1YmRhYjBjNTVlXkEyXkFqcGc@._V1_.jpg', year: 1974, genre: 'Crime', description: 'The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.' },
-   // { title: '12 Angry Men', director: 'Sidney Lumet', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/12_Angry_Men_%281957_film_poster%29.jpg/1200px-12_Angry_Men_%281957_film_poster%29.jpg', year: 1957, genre: 'Drama', description: 'The jury in a New York City murder trial is frustrated by a single member whose skeptical caution forces them to more carefully consider the evidence before jumping to a hasty verdict.' },
-   // { title: 'The Lord of the Rings: The Return of the King', director: 'Peter Jackson', imageUrl: 'https://m.media-amazon.com/images/M/MV5BMTZkMjBjNWMtZGI5OC00MGU0LTk4ZTItODg2NWM3NTVmNWQ4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', year: 2003, genre: 'Fantasy', description: 'Gandalf and Aragorn lead the World of Men against Saurons army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.' },
-   // { title: 'Schindlers List', director: 'Steven Spielberg', imageUrl: 'https://m.media-amazon.com/images/M/MV5BNjM1ZDQxYWUtMzQyZS00MTE1LWJmZGYtNGUyNTdlYjM3ZmVmXkEyXkFqcGc@._V1_.jpg', year: 1993, genre: 'Tragedy', description: 'In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.' },
-   // { title: 'Pulp Fiction', director: 'Quentin Tarantino', imageUrl: 'https://m.media-amazon.com/images/M/MV5BYTViYTE3ZGQtNDBlMC00ZTAyLTkyODMtZGRiZDg0MjA2YThkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', year: 1994, genre: 'Crime', description: 'The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.' },
-   // { title: 'The Lord of the Rings: The Fellowship of the Ring', director: 'Peter Jackson', imageUrl: '', year: 2001, genre: 'Fantasy', description: 'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.' },
-   // { title: 'The Good, the Bad, and the Ugly', director: 'Sergio Leone', imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/45/Good_the_bad_and_the_ugly_poster.jpg', year: 1966, genre: 'Spaghetti Western', description: 'A bounty-hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery.' },
-//];
-
 // READ/ GET all movies
 app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Movies.find()
@@ -167,6 +150,10 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), as
       return res.status(400).send('Permission denied');
   }
 
+  if (req.body.Password) {
+    req.body.Password = Users.hashPassword(req.body.Password);
+  }
+
   await Users.findOneAndUpdate({ Username: req.params.Username }, {
       $set:
       {
@@ -174,8 +161,7 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }), as
           Password: req.body.Password,
           Email: req.body.Email,
           Birthday: req.body.Birthday
-      }
-  },
+      }},
       { new: true }) 
       .then((updatedUser) => {
           res.json(updatedUser);
