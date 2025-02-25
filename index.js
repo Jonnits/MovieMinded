@@ -143,33 +143,48 @@ app.post('/users',
       });
   });
 
-// UPDATE/ PUT user info
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), async (req, res) => {
-
+// UPDATE user info
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), [
+  check('Username', 'Username is required').optional().isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
+  check('NewPassword', 'Password is required').optional().not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').optional().isEmail()
+], async (req, res) => {
   if(req.user.Username !== req.params.Username){
-      return res.status(400).send('Permission denied');
+    return res.status(400).send('Permission denied');
   }
 
-  if (req.body.Password) {
-    req.body.Password = Users.hashPassword(req.body.Password);
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
   }
 
-  await Users.findOneAndUpdate({ Username: req.params.Username }, {
-      $set:
-      {
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday
-      }},
-      { new: true }) 
-      .then((updatedUser) => {
-          res.json(updatedUser);
-      })
-      .catch((err) => {
-          console.log(err);
-          res.status(500).send('Error: ' + err);
-      })
+  try {
+    const user = await Users.findOne({ Username: req.params.Username });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    if (!req.body.CurrentPassword || !user.validatePassword(req.body.CurrentPassword)) {
+      return res.status(401).send('Current password is incorrect');
+    }
+
+    let updateData = {};
+    if (req.body.Username) updateData.Username = req.body.Username;
+    if (req.body.NewPassword) updateData.Password = Users.hashPassword(req.body.NewPassword);
+    if (req.body.Email) updateData.Email = req.body.Email;
+    if (req.body.Birthday) updateData.Birthday = req.body.Birthday;
+
+    const updatedUser = await Users.findOneAndUpdate(
+      { Username: req.params.Username },
+      { $set: updateData },
+      { new: true }
+    );
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  }
 });
 
 // CREATE/ POST a movie to a user's list of favorites

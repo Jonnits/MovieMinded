@@ -69,14 +69,16 @@
       </tr>
     </tr>
     <tr>
-      <td>Allow users to update their username</td>
+      <td>Allow users to update their information</td>
       <td>PUT</td>
       <td>/users/[username]</td>
       <td>username (URL parameter)</td>
       <td>A JSON object with new user data (name, ID), for example: <br><code>
         {<br>
-          "name": "Jonnits",<br>
-          "id": "67aaa422b7a811adb061d8cb"<br>
+          "CurrentPassword": "P4ssw0rd" [required],<br>
+          "newPassword": "NewP4ssw0rd" [optional],<br>
+          "Email": "newemail@email.com" [optional],<br>
+          "Birthday": "1990-01-01" [optional]<br>
       }</code>
       </td>
       <td>A JSON object with updated data is returned. If a field is faulty, returns 422 error. If a field is empty or matches current username, returns 400 error.</td>
