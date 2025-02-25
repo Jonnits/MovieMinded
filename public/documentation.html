@@ -58,7 +58,7 @@
         <td>POST</td>
         <td>/users</td>
         <td>username (URL parameter)</td>
-        <td>A JSON object with required fields (currently just username), for example: <br><code>
+        <td>A JSON object with required fields (username, password, email), for example: <br><code>
           {<br>
             "Username": "Jonnits",<br>
               "Password": "$afetyFirst",<br>
@@ -73,7 +73,7 @@
       <td>PUT</td>
       <td>/users/[username]</td>
       <td>username (URL parameter)</td>
-      <td>A JSON object with new user data (name, ID), for example: <br><code>
+      <td>A JSON object with required data (current password), and optional new user data (newPassword, email, birthday), for example: <br><code>
         {<br>
           "CurrentPassword": "P4ssw0rd" [required],<br>
           "newPassword": "NewP4ssw0rd" [optional],<br>
@@ -88,12 +88,7 @@
       <td>PUT</td>
       <td>/users/[username]/favorites/[movieID]</td>
       <td>username, movieID</td>
-      <td>A JSON object with movie title, for example:<br><code>
-        { <br>
-          "name": "Jonnits", <br>
-          "title": "Pulp Fiction" <br>
-        } </code>
-      </td>
+      <td>None</td>
       <td>If username and movie title are found, the movie is added to user's favorites list. If not found, returns 404 error. If movie is already in user's favorites list, returns 400 error.</td>
     </tr>
     <tr>
@@ -101,12 +96,7 @@
       <td>DELETE</td>
       <td>/users/[username]/favorites/[movieID]</td>
       <td>username, movieID</td>
-      <td>A JSON object with movie title, for example:<br><code>
-        {<br>
-          "name": "Jonnits",<br>
-          "title": "Pulp Fiction"<br>
-        }</code>
-      </td>
+      <td>None</td>
       <td>If username and movie title are both found, the movie is removed from user's favorites list. If not found, returns 404 error.</td>
     </tr>
     <tr>
