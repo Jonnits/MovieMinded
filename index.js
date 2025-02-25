@@ -105,7 +105,8 @@ app.post('/users',
   [
     check('Username', 'Username is required').isLength({min: 5}),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
+    check('Password', 'Password must be at least 5 characters long').isLength({min: 5}),
+    check('Password', 'Password contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Email', 'Email does not appear to be valid').isEmail()
   ], async (req, res) => {
 
@@ -147,7 +148,8 @@ app.post('/users',
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }), [
   check('Username', 'Username is required').optional().isLength({min: 5}),
   check('Username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
-  check('NewPassword', 'Password is required').optional().not().isEmpty(),
+  check('NewPassword', 'Password must be at least 5 characters long').optional().isLength({min: 5}),
+  check('NewPassword', 'Password contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
   check('Email', 'Email does not appear to be valid').optional().isEmail()
 ], async (req, res) => {
   if(req.user.Username !== req.params.Username){
