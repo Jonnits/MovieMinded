@@ -34,4 +34,5 @@ MovieMinded is a REST API that provides users with access to key information abo
 
 ## Where Can I Access This Application?
 
+You can find the live application here: [MovieMinded Application](https://movieminded-d764560749d0.herokuapp.com/)
 The source code and documentation are available on GitHub: [MovieMinded Repository](https://github.com/Jonnits/MovieMinded)
