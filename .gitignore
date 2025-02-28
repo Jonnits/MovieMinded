@@ -1,2 +1,9 @@
 # ignore npm's node_modules folder
 node_modules
+
+# ignore fallback arrays
+test.movies.json
+test.users.json
+
+#ignore Git attr
+.gitattributes
