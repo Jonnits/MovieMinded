@@ -7,9 +7,7 @@ let Users = Models.User,
 JWTStrategy = passportJWT.Strategy,
 ExtractJWT = passportJWT.ExtractJwt;
 
-passport.use(
-    new LocalStrategy(
-        {
+passport.use(new LocalStrategy({
             usernameField: 'Username',
             passwordField: 'Password',
         },
@@ -40,7 +38,6 @@ passport.use(
             }
     )
 );
-
 
 passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),

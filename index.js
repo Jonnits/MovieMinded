@@ -22,12 +22,12 @@ app.use(bodyParser.json());
 const cors = require('cors');
 app.use(cors());
 
-let auth = require('./auth')(app);
+//let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 
 // READ/ GET all movies
-app.get('/movies'), async (req, res) => {
+app.get('/movies', async (req, res) => {
   await Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
@@ -36,7 +36,7 @@ app.get('/movies'), async (req, res) => {
       console.error(error);
       res.status(500).send('Error: ' + error);
     });
-};
+});
 
 // READ/ GET specific movie
 app.get('/movies/:title', passport.authenticate('jwt', { session: false }), async (req, res) => {
