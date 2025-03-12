@@ -30,7 +30,7 @@ require('./passport');
 app.get('/movies', async (req, res) => {
   await Movies.find()
     .then((movies) => {
-      res.status(201).json(movies);
+      res.status(200).json(movies);  // Changed to 200 status, as it's successful
     })
     .catch((error) => {
       console.error(error);
