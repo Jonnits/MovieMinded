@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
+const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const swaggerJsdoc = require('swagger-jsdoc');
@@ -136,6 +137,32 @@ app.post('/users',
         res.status(500).send('Error: ' + error);
       });
   });
+
+// LOGIN/ POST login
+app.post('/login', async (req, res) => {
+  const { Username, Password } = req.body;
+
+  try {
+    const user = await Users.findOne({ Username });
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
+
+    const isValidPassword = bcrypt.compareSync(Password, user.Password);
+    if (!isValidPassword) {
+      return res.status(401).json({ message: 'Incorrect password' });
+    }
+
+    const token = jwt.sign({ Username: user.Username, id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d'
+    });
+
+    return res.status(200).json({ user, token });
+  } catch (error) {
+    console.error('Login error:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 // UPDATE user info
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }), [
