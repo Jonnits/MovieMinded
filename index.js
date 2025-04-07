@@ -46,6 +46,25 @@ app.get('/movies/:title', passport.authenticate('jwt', { session: false }), asyn
   }
 });
 
+// CREATE/ POST movie to favorites
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  if (req.user.Username !== req.params.Username) {
+    return res.status(403).send('Permission denied');
+  }
+
+  try {
+    const updatedUser = await Users.findOneAndUpdate(
+      { Username: req.params.Username },
+      { $addToSet: { FavoriteMovies: req.params.MovieID } },
+      { new: true }
+    );
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  }
+});
+
 // READ/ GET movies by genre
 app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
@@ -120,7 +139,7 @@ app.post('/users',
     }
   });
 
-// UPDATE user info
+// UPDATE user info (new password)
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }), async (req, res) => {
   if (req.user.Username !== req.params.Username) {
     return res.status(400).send('Permission denied');
@@ -152,6 +171,25 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
     if (!deletedUser) return res.status(404).send('No such user.');
     res.status(200).send(`User ${req.params.username} has been deleted.`);
   } catch (err) {
+    res.status(500).send('Error: ' + err);
+  }
+});
+
+// DELETE/ DELETE movie from favorites
+app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  if (req.user.Username !== req.params.Username) {
+    return res.status(403).send('Permission denied');
+  }
+
+  try {
+    const updatedUser = await Users.findOneAndUpdate(
+      { Username: req.params.Username },
+      { $pull: { FavoriteMovies: req.params.MovieID } },
+      { new: true }
+    );
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
     res.status(500).send('Error: ' + err);
   }
 });
