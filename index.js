@@ -47,15 +47,18 @@ app.get('/movies/:title', passport.authenticate('jwt', { session: false }), asyn
 });
 
 // CREATE/ POST movie to favorites
-app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.post('/users/:Username/movies/:MovieTitle', passport.authenticate('jwt', { session: false }), async (req, res) => {
   if (req.user.Username !== req.params.Username) {
     return res.status(403).send('Permission denied');
   }
 
   try {
+    const movie = await Movies.findOne({ Title: req.params.MovieTitle });
+    if (!movie) return res.status(404).send('Movie not found');
+
     const updatedUser = await Users.findOneAndUpdate(
       { Username: req.params.Username },
-      { $addToSet: { FavoriteMovies: req.params.MovieID } },
+      { $addToSet: { FavoriteMovies: movie._id } },
       { new: true }
     );
     res.json(updatedUser);
@@ -176,15 +179,18 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
 });
 
 // DELETE/ DELETE movie from favorites
-app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.delete('/users/:Username/movies/:MovieTitle', passport.authenticate('jwt', { session: false }), async (req, res) => {
   if (req.user.Username !== req.params.Username) {
     return res.status(403).send('Permission denied');
   }
 
   try {
+    const movie = await Movies.findOne({ Title: req.params.MovieTitle });
+    if (!movie) return res.status(404).send('Movie not found');
+
     const updatedUser = await Users.findOneAndUpdate(
       { Username: req.params.Username },
-      { $pull: { FavoriteMovies: req.params.MovieID } },
+      { $pull: { FavoriteMovies: movie._id } },
       { new: true }
     );
     res.json(updatedUser);
