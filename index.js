@@ -58,9 +58,10 @@ app.post('/users/:Username/movies/:MovieTitle', passport.authenticate('jwt', { s
 
     const updatedUser = await Users.findOneAndUpdate(
       { Username: req.params.Username },
-      { $addToSet: { FavoriteMovies: movie._id } },
+      { $addToSet: { FavoriteMovies: movie._id } }, 
       { new: true }
-    );
+    ).populate('FavoriteMovies'); 
+
     res.json(updatedUser);
   } catch (err) {
     console.error(err);
@@ -192,7 +193,8 @@ app.delete('/users/:Username/movies/:MovieTitle', passport.authenticate('jwt', {
       { Username: req.params.Username },
       { $pull: { FavoriteMovies: movie._id } },
       { new: true }
-    );
+    ).populate('FavoriteMovies');
+
     res.json(updatedUser);
   } catch (err) {
     console.error(err);
