@@ -20,7 +20,6 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 const cors = require('cors');
-
 const allowedOrigins = ['http://localhost:1234', 'http://localhost:53498', 'https://movieminded-d764560749d0.herokuapp.com'];
 
 app.use(cors({
@@ -59,32 +58,28 @@ app.get('/movies/:title', passport.authenticate('jwt', { session: false }), asyn
 
 // CREATE/ POST movie to favorites
 app.post('/users/:Username/movies/:MovieTitle', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  if (req.user.Username !== req.params.Username) {
+    return res.status(403).send('Permission denied');
+  }
+
   try {
     const decodedTitle = decodeURIComponent(req.params.MovieTitle);
-    const username = req.params.Username;
-
-    console.log(`Incoming add-favorite request`);
-    console.log(`Username: ${username}`);
-    console.log(`Encoded title: ${req.params.MovieTitle}`);
-    console.log(`Decoded title: ${decodedTitle}`);
-
     const movie = await Movies.findOne({ Title: { $regex: new RegExp(`^${decodedTitle}$`, 'i') } });
-    console.log("Movie found:", movie ? movie.Title : "No movie found");
 
     if (!movie) {
-      return res.status(404).send("Movie not found");
+      return res.status(404).send('Movie not found');
     }
 
     const updatedUser = await Users.findOneAndUpdate(
-      { Username: username },
+      { Username: req.params.Username },
       { $addToSet: { FavoriteMovies: movie._id } },
       { new: true }
-    );
+    ).populate('FavoriteMovies');
 
-    return res.json(updatedUser);
+    res.json(updatedUser);
   } catch (error) {
-    console.error("Error adding favorite movie:", error);
-    return res.status(500).send("Internal Server Error");
+    console.error('Error adding favorite movie:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
@@ -207,6 +202,7 @@ app.delete('/users/:Username/movies/:MovieTitle', passport.authenticate('jwt', {
   try {
     const decodedTitle = decodeURIComponent(req.params.MovieTitle);
     const movie = await Movies.findOne({ Title: { $regex: new RegExp(`^${decodedTitle}$`, 'i') } });
+
     if (!movie) return res.status(404).send('Movie not found');
 
     const updatedUser = await Users.findOneAndUpdate(
