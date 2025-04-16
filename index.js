@@ -20,7 +20,18 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 const cors = require('cors');
-app.use(cors());
+
+const allowedOrigins = ['http://localhost:1234', 'http://localhost:53498'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy does not allow access from this origin'));
+    }
+  }
+}));
 
 let auth = require('./auth')(app);
 
