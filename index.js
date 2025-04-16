@@ -48,24 +48,32 @@ app.get('/movies/:title', passport.authenticate('jwt', { session: false }), asyn
 
 // CREATE/ POST movie to favorites
 app.post('/users/:Username/movies/:MovieTitle', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  if (req.user.Username !== req.params.Username) {
-    return res.status(403).send('Permission denied');
-  }
-
   try {
-    const movie = await Movies.findOne({ Title: req.params.MovieTitle });
-    if (!movie) return res.status(404).send('Movie not found');
+    const decodedTitle = decodeURIComponent(req.params.MovieTitle);
+    const username = req.params.Username;
+
+    console.log(`Incoming add-favorite request`);
+    console.log(`Username: ${username}`);
+    console.log(`Encoded title: ${req.params.MovieTitle}`);
+    console.log(`Decoded title: ${decodedTitle}`);
+
+    const movie = await Movies.findOne({ Title: { $regex: new RegExp(`^${decodedTitle}$`, 'i') } });
+    console.log("Movie found:", movie ? movie.Title : "No movie found");
+
+    if (!movie) {
+      return res.status(404).send("Movie not found");
+    }
 
     const updatedUser = await Users.findOneAndUpdate(
-      { Username: req.params.Username },
-      { $addToSet: { FavoriteMovies: movie._id } }, 
+      { Username: username },
+      { $addToSet: { FavoriteMovies: movie._id } },
       { new: true }
-    ).populate('FavoriteMovies'); 
+    );
 
-    res.json(updatedUser);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error: ' + err);
+    return res.json(updatedUser);
+  } catch (error) {
+    console.error("Error adding favorite movie:", error);
+    return res.status(500).send("Internal Server Error");
   }
 });
 
@@ -186,7 +194,8 @@ app.delete('/users/:Username/movies/:MovieTitle', passport.authenticate('jwt', {
   }
 
   try {
-    const movie = await Movies.findOne({ Title: req.params.MovieTitle });
+    const decodedTitle = decodeURIComponent(req.params.MovieTitle);
+    const movie = await Movies.findOne({ Title: { $regex: new RegExp(`^${decodedTitle}$`, 'i') } });
     if (!movie) return res.status(404).send('Movie not found');
 
     const updatedUser = await Users.findOneAndUpdate(
