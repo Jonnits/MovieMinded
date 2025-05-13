@@ -20,7 +20,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 const cors = require('cors');
-const allowedOrigins = ['http://localhost:1234', 'http://localhost:53498', 'https://movieminded-d764560749d0.herokuapp.com', 'https://spiffy-boba-3745f1.netlify.app'];
+const allowedOrigins = ['http://localhost:1234', 'http://localhost:53498', 'https://movieminded-d764560749d0.herokuapp.com', 'https://spiffy-boba-3745f1.netlify.app', 'https://movie-minded.netlify.app'];
 
 app.use(cors({
   origin: (origin, callback) => {
