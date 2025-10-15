@@ -33,31 +33,31 @@
     <tr>
       <td>Return data about a single movie by title</td>
       <td>GET</td>
-      <td>/movies/[title]</td>
+      <td>/movies/:title</td>
       <td>title (URL parameter)</td>
       <td>None</td>
       <td>A JSON object of the movie specified. If not found, returns a 404 error.</td>
       <tr>
         <td>Return data about a genre by title</td>
         <td>GET</td>
-        <td>/movies/[title]/genre</td>
-        <td>title (URL parameter)</td>
+        <td>/movies/genre/:genreName</td>
+        <td>genreName (URL parameter)</td>
         <td>None</td>
-        <td>A JSON array of genre's details including a list of its movies. If movie is not found, returns 404 error.</td>
+        <td>A JSON array of movies in the genre. If none are found, returns 404 error.</td>
       </tr>
       <tr>
         <td>Return data about a director by name</td>
         <td>GET</td>
-        <td>/directors/[director]</td>
-        <td>director name (URL parameter)</td>
+        <td>/movies/directors/:directorName</td>
+        <td>directorName (URL parameter)</td>
         <td>None</td>
-        <td>A JSON array with director's details including a list of their movies. If director is not found, returns 404 error.</td>
+        <td>A JSON array of movies by the director. If none are found, returns 404 error.</td>
       </tr>
       <tr>
         <td>Allow new users to register</td>
         <td>POST</td>
-        <td>/users</td>
-        <td>username (URL parameter)</td>
+      <td>/users</td>
+      <td>None</td>
         <td>A JSON object with required fields (username, password, email), for example: <br><code>
           {<br>
             "Username": "Jonnits",<br>
@@ -71,12 +71,12 @@
     <tr>
       <td>Allow users to update their information</td>
       <td>PUT</td>
-      <td>/users/[username]</td>
-      <td>username (URL parameter)</td>
-      <td>A JSON object with required data (current password), and optional new user data (newPassword, email, birthday), for example: <br><code>
+      <td>/users/:Username</td>
+      <td>Username (URL parameter; must match authenticated user)</td>
+      <td>A JSON object with optional new user data (Username, NewPassword, Email, Birthday), for example: <br><code>
         {<br>
-          "CurrentPassword": "P4ssw0rd" [required],<br>
-          "newPassword": "NewP4ssw0rd" [optional],<br>
+          "Username": "NewName" [optional],<br>
+          "NewPassword": "NewP4ssw0rd" [optional],<br>
           "Email": "newemail@email.com" [optional],<br>
           "Birthday": "1990-01-01" [optional]<br>
       }</code>
@@ -85,17 +85,17 @@
     </tr>
     <tr>
       <td>Allow users to add a movie to their favorites list</td>
-      <td>PUT</td>
-      <td>/users/[username]/favorites/[movieID]</td>
-      <td>username, movieID</td>
+      <td>POST</td>
+      <td>/users/:Username/movies/:MovieTitle</td>
+      <td>Username, MovieTitle</td>
       <td>None</td>
-      <td>If username and movie title are found, the movie is added to user's favorites list. If not found, returns 404 error. If movie is already in user's favorites list, returns 400 error.</td>
+      <td>If username and movie title are found, the movie is added to user's favorites list. If not found, returns 404 error.</td>
     </tr>
     <tr>
       <td>Allow users to remove a movie from their favorites list</td>
       <td>DELETE</td>
-      <td>/users/[username]/favorites/[movieID]</td>
-      <td>username, movieID</td>
+      <td>/users/:Username/movies/:MovieTitle</td>
+      <td>Username, MovieTitle</td>
       <td>None</td>
       <td>If username and movie title are both found, the movie is removed from user's favorites list. If not found, returns 404 error.</td>
     </tr>

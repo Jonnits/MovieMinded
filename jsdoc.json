@@ -1,0 +1,15 @@
+{
+  "source": {
+    "include": ["."],
+    "includePattern": ".+\\.(js|mjs|cjs)$",
+    "exclude": ["node_modules", "docs", "public", "css", "map"]
+  },
+  "opts": {
+    "destination": "docs",
+    "recurse": true,
+    "encoding": "utf8",
+    "readme": "README.md",
+    "verbose": true
+  },
+  "plugins": []
+}

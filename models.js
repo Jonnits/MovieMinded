@@ -1,6 +1,29 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
+/**
+ * @typedef Genre
+ * @property {string} Name
+ * @property {string} [Description]
+ */
+
+/**
+ * @typedef Director
+ * @property {string} Name
+ * @property {string} [Bio]
+ */
+
+/**
+ * @typedef Movie
+ * @property {string} Title
+ * @property {string} Description
+ * @property {Genre} Genre
+ * @property {Director} Director
+ * @property {string[]} [Actors]
+ * @property {string} [ImagePath]
+ * @property {boolean} [Featured]
+ */
+
 let movieSchema = mongoose.Schema({
     Title: {type: String, required: true},
     Description: {type: String, required: true},
@@ -16,6 +39,19 @@ let movieSchema = mongoose.Schema({
     ImagePath: String,
     Featured: Boolean
 });
+
+/**
+ * @typedef User
+ * @property {string} Username
+ * @property {string} Password
+ * @property {string} Email
+ * @property {Date} [Birthday]
+ * @property {ObjectId[]} [FavoriteMovies] - References Movie documents
+ */
+
+/**
+ * @typedef {string} ObjectId
+ */
 
 let userSchema = mongoose.Schema ({
     Username: {type: String, required: true},
